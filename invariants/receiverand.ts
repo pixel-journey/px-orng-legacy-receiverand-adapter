@@ -69,13 +69,6 @@ export function openJob(
   };
 }
 
-/**
- * Legacy receiverand path.
- * 1. caller must be orng.wax (require_auth stand-in)
- * 2. job must exist and be open
- * 3. entropy is lowercase hex of bounded length
- * 4. resolve once — same entropy is a no-op; different entropy refuses
- */
 export function receiverand(
   book: Book,
   input: {
@@ -112,4 +105,34 @@ export function receiverand(
 export function emptyBook(self: string): Book {
   assertName(self, "self");
   return { self, jobs: [] };
+}
+
+/** Unsigned receiverand-style body for educational client demos. Not broadcast. */
+export function unsignedReceiverandBody(args: {
+  caller: string;
+  jobId: string;
+  entropyHex: string;
+}): {
+  account: string;
+  name: string;
+  data: { caller: string; job_id: string; entropy: string };
+  sent: false;
+} {
+  assertName(args.caller, "caller");
+  if (args.caller !== ORNG_ACCOUNT) throw new Error("require orng.wax");
+  const jobId = u64(args.jobId, "job id").toString();
+  const hex = args.entropyHex.toLowerCase();
+  if (
+    hex.length < MIN_ENTROPY_HEX ||
+    hex.length > MAX_ENTROPY_HEX ||
+    !HEX.test(hex)
+  ) {
+    throw new Error("bad entropy");
+  }
+  return {
+    account: "pxrngdapp",
+    name: "receiverand",
+    data: { caller: args.caller, job_id: jobId, entropy: hex },
+    sent: false,
+  };
 }
