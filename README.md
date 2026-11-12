@@ -1,47 +1,36 @@
 # px-orng-legacy-receiverand-adapter
 
 > **Trust:** private educational lab (Tier B)  
-> **Quest:** 002 — legacy `orng.wax::receiverand` path  
+> **Domain:** WAX ORNG — legacy `receiverand`  
+> **Sources:** [SOURCES.md](SOURCES.md)  
 > **Vault:** [px-contract-examples-vault](https://github.com/pixel-journey/px-contract-examples-vault)
 
 **One-sentence goal:** Teach the auth gate on the **legacy** random delivery path: only `orng.wax` may resolve a job, and resolve is once-only.
 
 **Real code:** `npm test`. **Does not** call `orng.wax`, pull credits, or produce wasm.
 
+Official: [wax-orng](https://github.com/worldwide-asset-exchange/wax-orng). Sample: [RNG tutorial](https://docs.wax.io/build/tutorials/create-wax-rng-smart-contract/rng_sample). Prefer [v3 starter](https://github.com/pixel-journey/px-orng-v3-randnotify-starter) for new work; merge paths with [dual-callback](https://github.com/pixel-journey/px-orng-dual-callback-idempotent).
+
 ## What is true (executed)
 
 | Rule | Result |
 | --- | --- |
 | `caller === orng.wax` | resolve succeeds |
-| `caller === alice` | refused before resolve |
+| Wrong caller | refused |
 | Second delivery, same entropy | no-op (stays resolved) |
 | Second delivery, different entropy | refused |
-| Unknown job id | refused |
-| Entropy upper-case | stored lower-case |
-| Entropy too short / non-hex | refused |
-| Job id `0` on open | refused |
-| Assoc length 0 or 65 | refused |
-| 33rd open job | refused (cap 32) |
+| Unknown job / bad entropy / id 0 / assoc bounds / 33rd job | refused |
 
-## What is not claimed
+## Related
 
-- Live `orng.wax` notify or action
-- RNG credit stake / pay-per-use
-- Dual-path merge with `randnotify` (see `px-orng-dual-callback-idempotent`)
-- wasm / abi from CDT
+- [px-orng-v3-randnotify-starter](https://github.com/pixel-journey/px-orng-v3-randnotify-starter)
+- [px-orng-dual-callback-idempotent](https://github.com/pixel-journey/px-orng-dual-callback-idempotent)
+- [px-orng-coinflip-escrow](https://github.com/pixel-journey/px-orng-coinflip-escrow)
 
 ## Run
 
 ```bash
 npm test
 ```
-
-No host is called.
-
-## Related
-
-- `px-orng-v3-randnotify-starter` — v3 `randnotify` hygiene
-- `px-orng-dual-callback-idempotent` — shared resolver for both paths
-- `px-orng-coinflip-escrow` — payout on top of delivery
 
 MIT — Pixel Journey
