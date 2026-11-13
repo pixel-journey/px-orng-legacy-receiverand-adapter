@@ -1,16 +1,28 @@
-# Education
+# Education — legacy receiverand
 
-## Pitfall
+> **Rung:** `npm test` passes. No live `orng.wax`.  
+> Prefer [v3 randnotify](https://github.com/pixel-journey/px-orng-v3-randnotify-starter) for new contracts; keep this path only for compatibility.
 
-A contract that exposes a public `receiverand` (or a poorly gated notify handler) lets **any** account inject entropy and settle bets.
+## What you should be able to do
 
-## Rule order
+| Level | Skill |
+| --- | --- |
+| Beginner | Only `orng.wax` may resolve |
+| Intermediate | Once-only resolve; same entropy replay is a no-op |
+| Masterclass | Different entropy on second delivery must fail; dual-path merge |
 
-1. **Auth first** — stand-in for `require_auth("orng.wax")`. Refuse everyone else before looking up the job.
-2. **Job exists and is open** — unknown ids never create state from a callback.
-3. **Entropy shape** — bounded hex, normalized to lowercase so case variants cannot double-settle.
-4. **Once-only** — a second delivery with the **same** entropy is a no-op; a **different** entropy is refused (mismatch).
+## Beginner
 
-## Why legacy still matters
+Legacy delivery calls into your contract as `receiverand`. The **first** check is `caller === orng.wax`. Anyone else is refused before job state changes.
 
-v3 prefers `randnotify`. Older contracts and some dapps still listen on `receiverand`. The adapter rule is the same gate the dual-callback lab expects on that path alone.
+## Intermediate
+
+Open jobs with positive id, assoc length 1..64, max 32 open. Resolve stores entropy. Second resolve with **same** entropy is a no-op. Second resolve with **different** entropy throws `entropy mismatch` (detects inconsistent oracle deliveries).
+
+## Masterclass
+
+If your dapp still accepts both `receiverand` and `randnotify`, share one resolver: [dual-callback](https://github.com/pixel-journey/px-orng-dual-callback-idempotent). Do not pay twice.
+
+## Will not teach
+
+Live oracle RSA, credit economics, or wasm deployment.
