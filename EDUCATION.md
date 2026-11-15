@@ -1,20 +1,11 @@
 # Education — legacy receiverand adapter
 
-## Beginner
-
-Older orng.wax paths call `receiverand` on the dapp. Only `orng.wax` may deliver entropy. Anyone else must be refused before the job is touched.
-
-## Intermediate
-
-Once-only: same entropy again is safe; different entropy is not. Cap open jobs at 32. Normalize hex to lowercase.
-
-## Masterclass (not in this repo)
-
-- Live `requestrand` credits.
-- Dual callback with v3 `randnotify` (see coinflip / dual-callback labs).
+Before ORNG v3 `randnotify`, jobs resolved through `receiverand`. The critical gate is **caller must be orng.wax**. Same entropy twice is a no-op; different entropy is a mismatch.
 
 ## Outcomes
 
-1. Prove non-orng callers never resolve.
-2. Show same-entropy replay is a no-op.
-3. List open-job shape checks.
+1. Show non-orng callers never resolve.
+2. Show second identical entropy is idempotent.
+3. Show entropy is lowercased and length-bounded.
+
+Numbers: [WORKED-EXAMPLES.md](WORKED-EXAMPLES.md).
