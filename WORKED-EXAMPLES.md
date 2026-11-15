@@ -1,39 +1,34 @@
-# Worked examples — receiverand
+# Worked examples — legacy receiverand
 
-## Example A — happy path
+`ORNG_ACCOUNT` is `orng.wax`. Self dapp is `pxrngdapp`.
 
-```text
-book = emptyBook("dappcontract")
-book = openJob(book, { id: "1", assoc: "wager-1" })
-book = receiverand(book, {
-  caller: "orng.wax",
-  jobId: "1",
-  entropyHex: "aabbccdd",
-})
-// status resolved, entropy set
-```
+## Happy path
 
-## Example B — wrong caller
+Open job id `1`, assoc `bet-1`. Caller `orng.wax` with entropy `deadbeef` → status `resolved`, entropy stored lowercased.
 
-`caller: "evil"` → `require orng.wax`. Job stays open.
+## Caller gate
 
-## Example C — idempotent same entropy
+Caller `alice` throws `require orng.wax` **before** any resolve.
 
-Second `receiverand` with identical hex → book unchanged (still resolved).
+## Idempotent same bytes
 
-## Example D — conflicting entropy
+Second callback with the same entropy is a no-op (entropy stays `aabbccdd`). Different second entropy → `entropy mismatch`.
 
-Second delivery with different hex → `entropy mismatch`.
+## Shape
 
-## Example E — caps
-
-| Input | Error |
+| Case | Error |
 | --- | --- |
-| id `0` | non-positive id |
+| job `99` | unknown job |
+| entropy `abc` or `zzzzzzzz` | bad entropy |
+| entropy longer than `MAX_ENTROPY_HEX` (64) | bad entropy |
+| 64-char hex | accepted |
+| open id `0` | non-positive id |
+| second open id `1` | duplicate id |
+| empty assoc or 65 chars | bad assoc length |
 | 33rd open job | open job cap |
-| entropy `zz` | bad entropy |
-| unknown job id | unknown job |
 
-## Example F — unsigned body
+## unsigned body
 
-`unsignedReceiverandBody` builds a teaching action shape with `sent: false`. Not broadcast.
+`unsignedReceiverandBody` has `sent: false`, name `receiverand`, entropy lowercased. Non-orng caller refused on the body builder too.
+
+Prefer v3 `randnotify` for new contracts; this lab is the legacy path hygiene.
