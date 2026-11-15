@@ -1,10 +1,22 @@
-# Security notes — receiverand
+# Security — legacy receiverand
 
-| Mitigated | Behavior |
+## Closed in tests
+
+| Issue | Behavior |
 | --- | --- |
 | Non-orng caller | refused |
-| Double resolve same entropy | no-op |
-| Double resolve different entropy | refused |
-| Unknown job / bad entropy / caps | refused |
+| Unknown job | refused |
+| Bad entropy shape | refused |
+| Second different entropy | entropy mismatch |
+| Second same entropy | no-op |
+| Open id / assoc / cap | refused |
 
-Production: `require_auth(orng.wax)`, real notification routing, shared dual-path latch, credit checks before open.
+## Not closed
+
+| Concern | Guidance |
+| --- | --- |
+| Auth | Real `require_auth(orng.wax)` |
+| Notification wiring | Correct `on_notify` for the legacy action name |
+| Dual-path double pay | Use shared resolver (dual-callback lab) |
+
+No live oracle calls in this repository.
