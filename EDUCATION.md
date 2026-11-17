@@ -35,4 +35,25 @@ New contracts should implement **one** internal resolver and, if both notificati
 
 `require_auth(orng.wax)` on chain; string compare in tests is teaching only.
 
+### Common mistakes
+
+1. Deleting `receiverand` while jobs requested under the old ABI are still open.  
+2. Accepting any 32-byte string the user passes and calling it oracle output.  
+3. Paying on the adapter and again when `randnotify` is added without a shared writer.  
+4. Building a second payout function "just for legacy."
+
+### Nice-to-have extensions (not in this repo)
+
+| Idea | Note |
+| --- | --- |
+| Migration window | Accept both names for N days, then refuse `receiverand` after a published block |
+| Shared resolver only | [dual-callback](https://github.com/pixel-journey/px-orng-dual-callback-idempotent) |
+| Credits before open | [credit bucket](https://github.com/pixel-journey/px-orng-credit-bucket-monitor) |
+
 Numbers: [WORKED-EXAMPLES.md](WORKED-EXAMPLES.md).
+
+### Exercises
+
+1. Who may resolve? (`orng.wax` only)  
+2. Second different entropy — no-op or mismatch? (mismatch)  
+3. Preferred callback name for new WAX code? (`randnotify`)
