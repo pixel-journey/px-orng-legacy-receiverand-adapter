@@ -17,4 +17,4 @@ Same entropy twice → no-op. Different entropy → mismatch (do not overwrite).
 | [v3 starter](https://github.com/pixel-journey/px-orng-v3-randnotify-starter) | Job table + once-resolve |
 | [dual-callback](https://github.com/pixel-journey/px-orng-dual-callback-idempotent) | Both names, one writer |
 | [coinflip](https://github.com/pixel-journey/px-orng-coinflip-escrow) | Stricter second-entropy mismatch |
-| [ORNG path](https://github.com/pixel-journey/px-contract-examples-vault/blob/main/docs/ORNG-LEARNING-PATH.md) | Curriculum order |
+| `px-contract-examples-vault` (private index; not this public course) | Curriculum order |
