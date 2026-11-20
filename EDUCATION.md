@@ -43,6 +43,7 @@ Entropy is lowercased; odd length / non-hex / length > 64 refused. Open id 0, du
 | Second different entropy | mismatch |
 | Second same entropy | no-op |
 | Open id 0 / 33rd job | refused |
+| Dual payout bodies | use one shared resolver |
 
 ---
 
@@ -58,14 +59,6 @@ New contracts should implement **one** internal resolver and, if both notificati
 2. Accepting any 32-byte string the user passes and calling it oracle output.  
 3. Paying on the adapter and again when `randnotify` is added without a shared writer.  
 4. Building a second payout function "just for legacy."
-
-### Nice-to-have extensions (not in this repo)
-
-| Idea | Note |
-| --- | --- |
-| Migration window | Accept both names for N days, then refuse `receiverand` after a published block |
-| Shared resolver only | [dual-callback](https://github.com/pixel-journey/px-orng-dual-callback-idempotent) |
-| Credits before open | [credit bucket](https://github.com/pixel-journey/px-orng-credit-bucket-monitor) |
 
 ### Exercises
 
