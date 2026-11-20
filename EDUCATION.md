@@ -23,11 +23,28 @@ Official: [wax-orng](https://github.com/worldwide-asset-exchange/wax-orng) · [R
 
 Open job id `1`, assoc `bet-1`. Caller `orng.wax` + entropy `deadbeef` → resolved, entropy stored. Caller `alice` → refused before resolve.
 
+```bash
+npm test
+```
+
+---
+
 ## Intermediate
 
 Second callback with the **same** entropy → no-op (idempotent). Second with **different** entropy → `entropy mismatch` (do not overwrite).
 
 Entropy is lowercased; odd length / non-hex / length > 64 refused. Open id 0, duplicate open, bad assoc length, open-job cap (33rd) refused.
+
+### Attack → test
+
+| Attack | Lab behavior |
+| --- | --- |
+| Non-orng caller | refused |
+| Second different entropy | mismatch |
+| Second same entropy | no-op |
+| Open id 0 / 33rd job | refused |
+
+---
 
 ## Masterclass
 
@@ -50,10 +67,18 @@ New contracts should implement **one** internal resolver and, if both notificati
 | Shared resolver only | [dual-callback](https://github.com/pixel-journey/px-orng-dual-callback-idempotent) |
 | Credits before open | [credit bucket](https://github.com/pixel-journey/px-orng-credit-bucket-monitor) |
 
-Numbers: [WORKED-EXAMPLES.md](WORKED-EXAMPLES.md).
-
 ### Exercises
 
-1. Who may resolve? (`orng.wax` only)  
-2. Second different entropy — no-op or mismatch? (mismatch)  
-3. Preferred callback name for new WAX code? (`randnotify`)
+1. Who may resolve? (`orng.wax` only.)  
+2. Second different entropy — no-op or mismatch? (**mismatch**.)  
+3. Preferred callback name for new WAX code? (`randnotify`.)
+
+Numbers: [WORKED-EXAMPLES.md](WORKED-EXAMPLES.md) · [SECURITY](SECURITY.md) · [SOURCES](SOURCES.md).
+
+---
+
+## What this course will not teach
+
+- Live `orng.wax` delivery
+- That string compare is production auth
+- Maintaining two payout implementations long-term
